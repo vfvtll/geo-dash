@@ -3,6 +3,7 @@
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import {
+	AccessorKeyColumnDefBase,
 	ColumnDef,
 	ColumnFiltersState,
 	getCoreRowModel,
@@ -51,17 +52,16 @@ export function DataProvider({
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
 	const formatPhoneNumber = (phone: string) => {
-		const cleaned = phone.replace(/\D/g, ""); // Удаляем все нецифровые символы
+		const cleaned = phone.replace(/\D/g, "");
 
 		if (cleaned.length === 10) {
-			// Форматируем номер как 50-123-45-67
 			return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(
 				6,
 				8
 			)}-${cleaned.slice(8)}`;
 		}
 
-		return phone; // Если длина не соответствует, возвращаем как есть
+		return phone;
 	};
 	const initialColumns = useMemo<ColumnDef<DataType>[]>(
 		() => [
@@ -152,7 +152,9 @@ export function DataProvider({
 	);
 
 	const [columnOrder, setColumnOrder] = useState<string[]>(
-		initialColumns.map((col) => col.accessorKey as string)
+		initialColumns.map(
+			(col) => (col as AccessorKeyColumnDefBase<DataType>).accessorKey as string
+		)
 	);
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event;
@@ -168,7 +170,11 @@ export function DataProvider({
 	const orderedColumns = useMemo(
 		() =>
 			columnOrder.map(
-				(colId) => initialColumns.find((col) => col.accessorKey === colId)!
+				(colId) =>
+					initialColumns.find(
+						(col) =>
+							(col as AccessorKeyColumnDefBase<DataType>).accessorKey === colId
+					)!
 			),
 		[columnOrder, initialColumns]
 	);

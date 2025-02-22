@@ -33,6 +33,7 @@ const MapComponent: React.FC = () => {
 			.catch((err) => console.error("Kopyalama xətası:", err));
 	};
 
+	if (typeof window === "undefined") return;
 	return (
 		<MapContainer
 			center={defaultPosition}

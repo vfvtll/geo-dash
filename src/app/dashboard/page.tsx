@@ -1,6 +1,6 @@
 import { DataProvider } from "@/features/DataContext/DataContext";
 import DataTable from "@/features/DataTable/DataTable";
-import MapComponent from "@/features/MapComponent/MapComponent";
+import MapWrapper from "@/features/MapComponent/MapWrapper";
 import { getData } from "@/lib/getData";
 
 export default async function Dashboard() {
@@ -16,7 +16,7 @@ export default async function Dashboard() {
 						<DataTable />
 					</div>
 					<div className="w-full">
-						<MapComponent />
+						<MapWrapper />
 					</div>
 				</div>
 			</div>
