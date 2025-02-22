@@ -89,7 +89,7 @@ export default function Filter({
 		<DatePicker
 			value={(columnFilterValue ?? "") as string}
 			onChange={(value) => column.setFilterValue(value?.toISOString())}
-			placeholderText="Search..."
+			placeholderText="Axtarış..."
 			dateFormat="yyyy-MM-dd"
 			timeFormat="HH:mm"
 			showTimeSelect
@@ -100,7 +100,7 @@ export default function Filter({
 		<DebouncedInput
 			className="w-36 border shadow rounded"
 			onChange={(value) => column.setFilterValue(value)}
-			placeholder={`Search...`}
+			placeholder={`Axtarış...`}
 			type="text"
 			value={(columnFilterValue ?? "") as string}
 			style={{

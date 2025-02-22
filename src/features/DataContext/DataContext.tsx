@@ -14,6 +14,7 @@ import {
 	useReactTable,
 } from "@tanstack/react-table";
 import { createContext, useContext, useState, ReactNode, useMemo } from "react";
+import { format } from "date-fns";
 
 export interface DataType {
 	id: number;
@@ -48,6 +49,20 @@ export function DataProvider({
 	});
 
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+	const formatPhoneNumber = (phone: string) => {
+		const cleaned = phone.replace(/\D/g, ""); // Удаляем все нецифровые символы
+
+		if (cleaned.length === 10) {
+			// Форматируем номер как 50-123-45-67
+			return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(
+				6,
+				8
+			)}-${cleaned.slice(8)}`;
+		}
+
+		return phone; // Если длина не соответствует, возвращаем как есть
+	};
 	const initialColumns = useMemo<ColumnDef<DataType>[]>(
 		() => [
 			{
@@ -66,48 +81,61 @@ export function DataProvider({
 			},
 			{
 				accessorKey: "first_name",
-				header: "First Name",
+				header: "Ad",
 				size: 150,
 				minSize: 100,
 				maxSize: 200,
 			},
 			{
 				accessorKey: "last_name",
-				header: "Last Name",
+				header: "Soyad",
 				size: 150,
 				minSize: 100,
 				maxSize: 200,
 			},
 			{
 				accessorKey: "phone_number",
-				header: "Phone",
+				header: "Telefon",
 				size: 130,
 				minSize: 120,
 				maxSize: 180,
+				cell: ({ row }) => (
+					<a
+						href={`tel:${row.original.phone_number}`}
+						className="text-blue-600 underline"
+					>
+						{formatPhoneNumber(row.original.phone_number)}
+					</a>
+				),
 			},
 			{
 				accessorKey: "gps_code",
-				header: "GPS Code",
+				header: "GPS Kodu",
 				size: 120,
 				minSize: 100,
 				maxSize: 150,
 			},
 			{
 				accessorKey: "birth_year",
-				header: "Birth Year",
+				header: "Doğum ili",
 				size: 80,
 				minSize: 70,
 				maxSize: 100,
 			},
 			{
 				accessorKey: "datetime",
-				header: "Datetime",
+				header: "Tarix və Saat",
 				size: 180,
 				minSize: 150,
 				maxSize: 250,
 				meta: {
 					filterVariant: "datepicker",
 				},
+				cell: ({ row }) => (
+					<span className="text-gray-700">
+						{format(new Date(row.original.datetime), "dd.MM.yyyy HH:mm")}
+					</span>
+				),
 				filterFn: (
 					{ original }: Row<DataType>,
 					columnId: string,

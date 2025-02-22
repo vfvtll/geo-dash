@@ -72,33 +72,35 @@ const DataTable: React.FC = () => {
 					))}
 				</tbody>
 			</table>
-			<div className="flex items-center justify-between mt-4 border-t pt-4">
-				{/* 🔹 Пагинация */}
-				<div className="flex items-center gap-4">
-					<button
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
-						className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg 
+			{table.getPageCount() > 0 && (
+				<div className="flex items-center justify-between mt-4 border-t pt-4">
+					{/* 🔹 Пагинация */}
+					<div className="flex items-center gap-4">
+						<button
+							onClick={() => table.previousPage()}
+							disabled={!table.getCanPreviousPage()}
+							className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg 
 				hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
-					>
-						<ChevronLeft className="w-5 h-5" />
-					</button>
+						>
+							<ChevronLeft className="w-5 h-5" />
+						</button>
 
-					<span className="text-gray-700 font-medium">
-						Page {table.getState().pagination.pageIndex + 1} of{" "}
-						{table.getPageCount()}
-					</span>
+						<span className="text-gray-700 font-medium">
+							Səhifə {table.getState().pagination.pageIndex + 1} of{" "}
+							{table.getPageCount()}
+						</span>
 
-					<button
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
-						className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg 
+						<button
+							onClick={() => table.nextPage()}
+							disabled={!table.getCanNextPage()}
+							className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg 
 				hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
-					>
-						<ChevronRight className="w-5 h-5" />
-					</button>
+						>
+							<ChevronRight className="w-5 h-5" />
+						</button>
+					</div>
 				</div>
-			</div>
+			)}
 		</DndContext>
 	);
 };
