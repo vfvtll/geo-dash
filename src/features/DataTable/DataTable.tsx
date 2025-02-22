@@ -22,8 +22,12 @@ const DataTable: React.FC = () => {
 	const { handleDragEnd, table, columnOrder } = useData();
 
 	const sensors = useSensors(
-		useSensor(MouseSensor),
-		useSensor(TouchSensor),
+		useSensor(MouseSensor, {
+			activationConstraint: { distance: 5 },
+		}),
+		useSensor(TouchSensor, {
+			activationConstraint: { distance: 5 },
+		}),
 		useSensor(KeyboardSensor)
 	);
 	if (typeof window === "undefined") return;

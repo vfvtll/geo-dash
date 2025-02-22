@@ -9,12 +9,21 @@ import {
 	getCoreRowModel,
 	getFilteredRowModel,
 	getPaginationRowModel,
+	getSortedRowModel,
 	PaginationState,
 	Row,
+	SortingState,
 	Table,
 	useReactTable,
 } from "@tanstack/react-table";
-import { createContext, useContext, useState, ReactNode, useMemo } from "react";
+import {
+	createContext,
+	useContext,
+	useState,
+	ReactNode,
+	useMemo,
+	useEffect,
+} from "react";
 import { format } from "date-fns";
 
 export interface DataType {
@@ -49,6 +58,7 @@ export function DataProvider({
 		pageSize: 10,
 	});
 
+	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
 	const formatPhoneNumber = (phone: string) => {
@@ -118,9 +128,9 @@ export function DataProvider({
 			{
 				accessorKey: "birth_year",
 				header: "Doğum ili",
-				size: 80,
-				minSize: 70,
-				maxSize: 100,
+				size: 120,
+				minSize: 100,
+				maxSize: 120,
 			},
 			{
 				accessorKey: "datetime",
@@ -131,6 +141,7 @@ export function DataProvider({
 				meta: {
 					filterVariant: "datepicker",
 				},
+				sortingFn: "datetime",
 				cell: ({ row }) => (
 					<span className="text-gray-700">
 						{format(new Date(row.original.datetime), "dd.MM.yyyy HH:mm")}
@@ -156,6 +167,16 @@ export function DataProvider({
 			(col) => (col as AccessorKeyColumnDefBase<DataType>).accessorKey as string
 		)
 	);
+
+	useEffect(() => {
+		const newSorting = columnFilters.map((filter) => ({
+			id: filter.id,
+			desc: false,
+		}));
+
+		setSorting(newSorting);
+	}, [columnFilters]);
+
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event;
 		if (!over || active.id === over.id) return;
@@ -185,14 +206,17 @@ export function DataProvider({
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
+		getSortedRowModel: getSortedRowModel(),
 		state: {
 			columnOrder,
 			pagination,
 			columnFilters,
+			sorting,
 		},
 		onPaginationChange: setPagination,
 		onColumnFiltersChange: setColumnFilters,
 		onColumnOrderChange: setColumnOrder,
+		onSortingChange: setSorting,
 	});
 
 	return (

@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { flexRender, Column, Header } from "@tanstack/react-table";
 import { DataType } from "@/features/DataContext/DataContext";
 import Filter from "./Filter";
+import { ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react"; // Используем иконки
 
 interface DraggableHeaderProps {
 	header: Header<DataType, unknown>;
@@ -20,6 +21,13 @@ const DraggableHeader = ({ header, column }: DraggableHeaderProps) => {
 		transition,
 	};
 
+	// Определяем иконку для сортировки
+	const SortingIcon = column.getIsSorted()
+		? column.getIsSorted() === "asc"
+			? ChevronUp
+			: ChevronDown
+		: ChevronsUpDown; // Если сортировка не активна — показываем "двойную стрелку"
+
 	return (
 		<th
 			ref={setNodeRef}
@@ -28,24 +36,17 @@ const DraggableHeader = ({ header, column }: DraggableHeaderProps) => {
 			style={{ ...style, maxWidth: `${header.getSize()}px` }}
 			className="border p-2"
 		>
-			{/* Заголовок с сортировкой */}
 			<div
-				className={
-					column.getCanSort()
-						? "cursor-grab select-none flex items-center"
-						: "flex items-center"
-				}
+				className="cursor-grab select-none flex items-center justify-between gap-2"
 				{...listeners}
-				style={{ maxWidth: `${header.getSize()}px` }}
+				style={{ maxWidth: `${header.getSize()}px`, cursor: "pointer" }}
 				onClick={column.getToggleSortingHandler()}
 			>
 				{flexRender(column.columnDef.header, header.getContext())}
-				{{
-					asc: " 🔼",
-					desc: " 🔽",
-				}[column.getIsSorted() as string] ?? null}
+				<SortingIcon className="w-4 h-4 text-gray-600" />
 			</div>
 
+			{/* Фильтр */}
 			{header.column.getCanFilter() ? (
 				<div style={{ maxWidth: `${header.getSize()}px` }}>
 					<Filter column={header.column} width={header.getSize()} />
