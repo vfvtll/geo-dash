@@ -91,9 +91,6 @@ export default function Filter({
 			onChange={(value) => column.setFilterValue(value?.toISOString())}
 			placeholderText="Axtarış..."
 			dateFormat="yyyy-MM-dd"
-			timeFormat="HH:mm"
-			showTimeSelect
-			timeIntervals={15}
 			className="p-2 border rounded-md"
 		/>
 	) : (
